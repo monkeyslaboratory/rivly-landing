@@ -1,26 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Satoshi:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Dark Theme (default) ── */
+:root,
+[data-theme="dark"] {
+  --bg-primary: #050505;
+  --bg-secondary: #0A0A0A;
+  --bg-elevated: #111111;
+  --bg-subtle: #1A1A1A;
+
+  --text-primary: #FAFAFA;
+  --text-secondary: #A1A1A1;
+  --text-muted: #666666;
+
+  --accent-primary: #FF6B2C;
+  --accent-warm: #FF8F5C;
+  --accent-hot: #FF4500;
+  --accent-glow: rgba(255,107,44,0.15);
+
+  --accent-secondary: #6366F1;
+  --accent-secondary-soft: #818CF8;
+  --accent-secondary-glow: rgba(99,102,241,0.15);
+
+  --gradient-hero: linear-gradient(135deg, #FF4500 0%, #FF6B2C 30%, #FF8F5C 60%, #FFB088 100%);
+
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+
+  --shadow-glow: 0 0 60px rgba(255,107,44,0.2), 0 0 120px rgba(255,69,0,0.1);
+
+  --nav-bg: rgba(5,5,5,0.8);
+}
+
+/* ── Light Theme ── */
+[data-theme="light"] {
+  --bg-primary: #FAFAFA;
+  --bg-secondary: #F5F5F5;
+  --bg-elevated: #FFFFFF;
+  --bg-subtle: #EEEEEE;
+
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+
+  --accent-primary: #E55A1B;
+  --accent-warm: #FF6B2C;
+  --accent-hot: #D94400;
+  --accent-glow: rgba(229,90,27,0.08);
+
+  --accent-secondary: #4F46E5;
+  --accent-secondary-soft: #6366F1;
+  --accent-secondary-glow: rgba(79,70,229,0.08);
+
+  --gradient-hero: linear-gradient(135deg, #FFE0CC 0%, #FFB088 30%, #FF8F5C 60%, #FF6B2C 100%);
+
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.15);
+
+  --shadow-glow: 0 0 60px rgba(255,107,44,0.1), 0 0 120px rgba(255,69,0,0.05);
+
+  --nav-bg: rgba(250,250,250,0.8);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Satoshi', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-hot: var(--accent-hot);
+  --color-accent-glow: var(--accent-glow);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-secondary-soft: var(--accent-secondary-soft);
+  --color-accent-secondary-glow: var(--accent-secondary-glow);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Theme transition ── */
+*,
+*::before,
+*::after {
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+}
+
+/* ── Base ── */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Satoshi', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Smooth scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-subtle);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ── Grain overlay ── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Marquee / ticker ── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.animate-marquee-reverse {
+  animation: marquee-reverse 25s linear infinite;
+}
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
+
+/* ── Shimmer badge ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, var(--accent-glow) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* ── Live dot pulse ── */
+@keyframes livePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.8); opacity: 0; }
+}
+.live-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22C55E;
+}
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #22C55E;
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+/* ── CTA pulse ── */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(128,128,128,0.15), 0 0 60px rgba(128,128,128,0.05); }
+  50% { box-shadow: 0 0 30px rgba(128,128,128,0.25), 0 0 80px rgba(128,128,128,0.1); }
+}
+.cta-pulse {
+  animation: ctaPulse 3s ease-in-out infinite;
+}
+
+/* ── Glass card ── */
+.glass-card {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+}
+[data-theme="light"] .glass-card {
+  background: rgba(255,255,255,0.6);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Selection ── */
+::selection {
+  background: var(--accent-primary);
+  color: white;
 }

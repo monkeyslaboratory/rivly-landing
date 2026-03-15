@@ -216,7 +216,7 @@ export function Pricing() {
               whileHover={{ scale: 1.01 }}
               className={`relative overflow-hidden rounded-2xl p-8 border transition-shadow ${
                 plan.popular
-                  ? 'bg-gradient-to-b from-[#4338CA] via-[#4F46E5] to-[#3730A3] border-[var(--accent-secondary-soft)] text-white scale-[1.02]'
+                  ? 'bg-gradient-to-b from-[#4338CA] via-[#4F46E5] to-[#3730A3] border-[var(--accent-secondary-soft)] text-white md:scale-[1.02]'
                   : 'bg-[var(--bg-secondary)] border-[var(--border)] hover:shadow-[var(--shadow-glow)]'
               }`}
               style={plan.popular ? {

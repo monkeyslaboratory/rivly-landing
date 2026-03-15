@@ -11,7 +11,7 @@
 
   --text-primary: #FAFAFA;
   --text-secondary: #A1A1A1;
-  --text-muted: #666666;
+  --text-muted: #888888;
 
   --accent-primary: #FF6B2C;
   --accent-warm: #FF8F5C;
@@ -41,7 +41,7 @@
 
   --text-primary: #111111;
   --text-secondary: #555555;
-  --text-muted: #999999;
+  --text-muted: #777777;
 
   --accent-primary: #E55A1B;
   --accent-warm: #FF6B2C;
@@ -219,4 +219,11 @@ body {
 ::selection {
   background: var(--accent-primary);
   color: white;
+}
+
+/* ── Focus visible ── */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

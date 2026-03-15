@@ -197,8 +197,8 @@ function CompetitorCardsVisual() {
             <div className="text-xs text-[var(--text-muted)] font-mono">{c.name.toLowerCase()}.com</div>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-            <span className="text-xs text-green-400 font-mono font-medium">Found</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span className="text-xs text-emerald-400 font-mono font-medium">Found</span>
           </div>
         </motion.div>
       ))}
@@ -325,7 +325,7 @@ function ReportVisual() {
         </div>
         <div>
           <div className="text-sm font-semibold text-[var(--text-primary)]">Overall UX Score</div>
-          <div className="text-xs text-green-400 font-medium">+5 from last week</div>
+          <div className="text-xs text-emerald-400 font-medium">+5 from last week</div>
         </div>
       </div>
       <div className="flex gap-2">

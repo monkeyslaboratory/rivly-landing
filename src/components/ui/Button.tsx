@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: ReactNode;
 }
 
-const baseClasses = 'relative inline-flex items-center justify-center gap-2 font-semibold rounded-xl cursor-pointer select-none';
+const baseClasses = 'relative inline-flex items-center justify-center gap-2 font-semibold rounded-2xl cursor-pointer select-none';
 
 const variants = {
   primary: 'bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-90',

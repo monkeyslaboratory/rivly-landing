@@ -62,7 +62,7 @@ export function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
-          <button onClick={() => scrollTo('#hero')} className="cursor-pointer">
+          <button onClick={() => scrollTo('#hero')} className="cursor-pointer" aria-label="Scroll to top">
             <Logo size={26} />
           </button>
 

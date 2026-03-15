@@ -27,8 +27,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: heroSequence.heading.delay, ease: EASE.smooth }}
-          className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]"
-          style={{ fontFamily: "'Satoshi', sans-serif" }}
+          className="text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]"
         >
           Your AI UX analyst watching{' '}
           <span
@@ -77,7 +76,7 @@ export function Hero() {
           transition={{ duration: 1, delay: heroSequence.product.delay, ease: EASE.smooth }}
           className="mt-8 w-full max-w-3xl perspective-[1200px]"
         >
-          <div className="relative rounded-2xl overflow-hidden border border-[var(--border)] shadow-2xl bg-[var(--bg-primary)]">
+          <div className="relative rounded-3xl overflow-hidden border border-[var(--border)] shadow-2xl bg-[var(--bg-primary)]">
             {/* Browser chrome */}
             <div className="flex items-center gap-2 px-5 py-3 bg-[var(--bg-primary)] border-b border-[var(--border)]">
               <div className="flex gap-1.5">

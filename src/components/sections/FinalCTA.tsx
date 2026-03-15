@@ -119,7 +119,7 @@ export function FinalCTA() {
   const isDark = theme === 'dark';
 
   return (
-    <section className="relative py-36 px-6 overflow-hidden">
+    <section className="relative py-28 px-6 overflow-hidden">
       <LightRays isDark={isDark} />
 
       {/* Transitions */}

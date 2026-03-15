@@ -60,7 +60,7 @@ export function ProblemStatement() {
             <motion.div
               key={p.stat}
               variants={staggerItem}
-              whileHover={{ y: -4, borderColor: 'var(--accent-primary)' }}
+              whileHover={{ y: -4, borderColor: 'var(--border-hover)' }}
               className="glass-card rounded-2xl p-8 text-center transition-shadow hover:shadow-[var(--shadow-glow)]"
             >
               <div

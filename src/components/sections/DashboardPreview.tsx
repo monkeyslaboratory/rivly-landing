@@ -112,8 +112,8 @@ export function DashboardPreview() {
                         </div>
                         <div className="text-right">
                           <div className="text-sm font-bold font-mono text-[var(--text-primary)]">{c.score}</div>
-                          <div className={`text-xs font-mono ${c.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                            {c.change}
+                          <div className={`text-xs font-mono ${c.change.startsWith('+') ? 'text-emerald-400' : 'text-rose-400'}`}>
+                            {c.change.startsWith('+') ? '▲' : '▼'} {c.change}
                           </div>
                         </div>
                         <div className="w-20 h-2 rounded-full bg-[var(--bg-subtle)] overflow-hidden">

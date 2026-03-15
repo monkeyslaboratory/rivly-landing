@@ -37,7 +37,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggle = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'));
 
   if (!mounted) {
-    return <html lang="en" data-theme="dark"><body style={{ background: '#050505' }}>{children}</body></html>;
+    return <>{children}</>;
   }
 
   return (

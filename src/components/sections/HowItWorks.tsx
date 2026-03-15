@@ -95,7 +95,7 @@ export function HowItWorks() {
                   whileInView="visible"
                   viewport={viewportOnce}
                   custom={0.1}
-                  className={`relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center`}
+                  className={`relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center pl-16 sm:pl-0`}
                   style={{ direction: i % 2 === 1 ? 'rtl' : 'ltr' }}
                 >
                   {/* Step number dot */}

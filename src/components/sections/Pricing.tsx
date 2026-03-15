@@ -157,6 +157,32 @@ function DustParticles() {
   );
 }
 
+function BlinkingZeroPrice() {
+  return (
+    <span className="inline-flex items-baseline">
+      $
+      <span className="relative inline-block">
+        0
+        {/* Eye inside the zero */}
+        <motion.span
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] block rounded-full bg-current"
+          animate={{
+            scaleY: [1, 1, 0.1, 1, 1],
+            opacity: [1, 1, 0.6, 1, 1],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            times: [0, 0.42, 0.46, 0.5, 1],
+            ease: 'easeInOut',
+          }}
+          style={{ width: '6px', height: '6px' }}
+        />
+      </span>
+    </span>
+  );
+}
+
 export function Pricing() {
   const [annual, setAnnual] = useState(false);
 
@@ -248,7 +274,7 @@ export function Pricing() {
                       className="flex items-baseline gap-1"
                     >
                       <span className={`text-4xl font-bold font-mono ${plan.popular ? 'text-white' : ''}`}>
-                        ${annual ? plan.annual : plan.monthly}
+                        {plan.monthly === 0 ? <BlinkingZeroPrice /> : `$${annual ? plan.annual : plan.monthly}`}
                       </span>
                       {plan.monthly > 0 && (
                         <span className={`text-sm ${plan.popular ? 'text-indigo-200' : 'text-[var(--text-muted)]'}`}>/mo</span>

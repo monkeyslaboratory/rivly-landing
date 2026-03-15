@@ -115,11 +115,11 @@ function MeshGradientOrb() {
       uTime: { value: 0 },
       uNoiseScale: { value: 1.2 },
       uNoiseStrength: { value: 0.35 },
-      uColor1: { value: new THREE.Color('#FF4500') },
-      uColor2: { value: new THREE.Color('#FF6B2C') },
-      uColor3: { value: new THREE.Color('#FF8F5C') },
-      uColor4: { value: new THREE.Color('#C4421A') },
-      uColor5: { value: new THREE.Color('#8B2500') },
+      uColor1: { value: new THREE.Color('#4338CA') },
+      uColor2: { value: new THREE.Color('#6366F1') },
+      uColor3: { value: new THREE.Color('#818CF8') },
+      uColor4: { value: new THREE.Color('#FF6B2C') },
+      uColor5: { value: new THREE.Color('#FF4500') },
     }),
     []
   );
@@ -136,17 +136,17 @@ function MeshGradientOrb() {
 
   useMemo(() => {
     if (!isDark) {
-      uniforms.uColor1.value.set('#FFB088');
-      uniforms.uColor2.value.set('#FF8F5C');
-      uniforms.uColor3.value.set('#FF6B2C');
-      uniforms.uColor4.value.set('#E55A1B');
-      uniforms.uColor5.value.set('#FFD4BC');
+      uniforms.uColor1.value.set('#6366F1');
+      uniforms.uColor2.value.set('#818CF8');
+      uniforms.uColor3.value.set('#A5B4FC');
+      uniforms.uColor4.value.set('#FF8F5C');
+      uniforms.uColor5.value.set('#FFB088');
     } else {
-      uniforms.uColor1.value.set('#FF4500');
-      uniforms.uColor2.value.set('#FF6B2C');
-      uniforms.uColor3.value.set('#FF8F5C');
-      uniforms.uColor4.value.set('#C4421A');
-      uniforms.uColor5.value.set('#8B2500');
+      uniforms.uColor1.value.set('#4338CA');
+      uniforms.uColor2.value.set('#6366F1');
+      uniforms.uColor3.value.set('#818CF8');
+      uniforms.uColor4.value.set('#FF6B2C');
+      uniforms.uColor5.value.set('#FF4500');
     }
   }, [isDark, uniforms]);
 

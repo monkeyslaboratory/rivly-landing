@@ -9,7 +9,7 @@ import { heroSequence, EASE } from '@/lib/animation-config';
 
 const HeroScene = dynamic(
   () => import('@/components/three/HeroScene').then((m) => ({ default: m.HeroScene })),
-  { ssr: false }
+  { ssr: false, loading: () => null }
 );
 
 

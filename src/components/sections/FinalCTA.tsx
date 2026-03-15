@@ -1,37 +1,14 @@
 'use client';
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useTheme } from '@/components/ThemeProvider';
 import { fadeInUp, viewportOnce } from '@/lib/animation-config';
 
-function FloatingParticles() {
+function LightRays({ isDark }: { isDark: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  interface Particle {
-    x: number;
-    y: number;
-    size: number;
-    speedY: number;
-    speedX: number;
-    opacity: number;
-    hue: number;
-  }
-
-  const particles = useMemo(() => {
-    const arr: Particle[] = [];
-    for (let i = 0; i < 60; i++) {
-      arr.push({
-        x: Math.random(),
-        y: Math.random(),
-        size: Math.random() * 3 + 1,
-        speedY: Math.random() * 0.15 + 0.05,
-        speedX: (Math.random() - 0.5) * 0.08,
-        opacity: Math.random() * 0.5 + 0.15,
-        hue: Math.random() > 0.5 ? 0 : 1, // 0 = orange, 1 = indigo
-      });
-    }
-    return arr;
-  }, []);
+  const isDarkRef = useRef(isDark);
+  isDarkRef.current = isDark;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -40,6 +17,8 @@ function FloatingParticles() {
     if (!ctx) return;
 
     let raf: number;
+    let time = 0;
+
     const resize = () => {
       canvas.width = canvas.offsetWidth * 2;
       canvas.height = canvas.offsetHeight * 2;
@@ -47,73 +26,109 @@ function FloatingParticles() {
     resize();
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const p of particles) {
-        p.y -= p.speedY * 0.002;
-        p.x += p.speedX * 0.001;
-        if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
-        if (p.x < -0.05) p.x = 1.05;
-        if (p.x > 1.05) p.x = -0.05;
+      time += 0.002;
+      const w = canvas.width;
+      const h = canvas.height;
+      const dark = isDarkRef.current;
 
-        const color = p.hue === 0
-          ? `rgba(255, 107, 44, ${p.opacity})`
-          : `rgba(129, 140, 248, ${p.opacity})`;
+      // Base fill
+      ctx.fillStyle = dark ? '#08051a' : '#f0ecff';
+      ctx.fillRect(0, 0, w, h);
 
-        ctx.beginPath();
-        ctx.arc(p.x * canvas.width, p.y * canvas.height, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
+      // Vertical rays
+      const rayCount = 50;
+      for (let i = 0; i < rayCount; i++) {
+        const norm = i / rayCount;
+        const x = norm * w;
+        const rayW = w / rayCount;
+
+        const f1 = 0.35 + Math.sin(time * 0.8) * 0.05;
+        const f2 = 0.65 + Math.cos(time * 0.6) * 0.05;
+
+        const d1 = Math.exp(-Math.pow((norm - f1) * 4, 2));
+        const d2 = Math.exp(-Math.pow((norm - f2) * 4, 2));
+        const brightness = Math.max(d1, d2 * 0.7);
+
+        if (brightness < 0.01) continue;
+
+        const mix = d2 / (d1 + d2 + 0.001);
+
+        let r: number, g: number, b: number;
+        if (dark) {
+          r = Math.round(67 + mix * 188);
+          g = Math.round(56 + mix * 51);
+          b = Math.round(202 - mix * 158);
+        } else {
+          // Light theme: softer, more saturated pastels
+          r = Math.round(99 + mix * 156);  // 99→255
+          g = Math.round(82 + mix * 25);   // 82→107
+          b = Math.round(241 - mix * 197); // 241→44
+        }
+
+        const peakY = 0.35 + d1 * 0.1;
+        const alpha = dark ? brightness : brightness * 0.6;
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, dark ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0)');
+        grad.addColorStop(peakY - 0.15, `rgba(${r},${g},${b},${alpha * 0.12})`);
+        grad.addColorStop(peakY, `rgba(${r},${g},${b},${alpha * 0.3})`);
+        grad.addColorStop(peakY + 0.15, `rgba(${r},${g},${b},${alpha * 0.1})`);
+        grad.addColorStop(1, dark ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0)');
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, 0, rayW + 1, h);
+
+        const combined = Math.min(1, d1 + d2);
+        if (combined > 0.2) {
+          ctx.fillStyle = `rgba(${r},${g},${b},${combined * 0.025})`;
+          ctx.fillRect(x, 0, 1, h);
+        }
       }
+
+      // Indigo glow (left)
+      const cx1 = (0.35 + Math.sin(time * 0.8) * 0.05) * w;
+      const cy1 = 0.38 * h;
+      const g1 = ctx.createRadialGradient(cx1, cy1, 0, cx1, cy1, w * 0.35);
+      g1.addColorStop(0, dark ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.18)');
+      g1.addColorStop(0.4, dark ? 'rgba(67,56,202,0.05)' : 'rgba(99,102,241,0.06)');
+      g1.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g1;
+      ctx.fillRect(0, 0, w, h);
+
+      // Orange glow (right)
+      const cx2 = (0.65 + Math.cos(time * 0.6) * 0.05) * w;
+      const cy2 = 0.5 * h;
+      const g2 = ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, w * 0.28);
+      g2.addColorStop(0, dark ? 'rgba(255,107,44,0.1)' : 'rgba(255,107,44,0.15)');
+      g2.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, w, h);
+
       raf = requestAnimationFrame(animate);
     };
-    animate();
 
+    animate();
     window.addEventListener('resize', resize);
     return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
-  }, [particles]);
+  }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
 }
 
 export function FinalCTA() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   return (
     <section className="relative py-36 px-6 overflow-hidden">
-      {/* Layered background */}
-      <div className="absolute inset-0 -z-10">
-        {/* Large blurred orbs */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,107,44,0.15) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
-        <div
-          className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-          }}
-        />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,69,0,0.1) 0%, transparent 70%)',
-            filter: 'blur(70px)',
-          }}
-        />
-      </div>
+      <LightRays isDark={isDark} />
 
-      {/* Particles */}
-      <FloatingParticles />
-
-      {/* Top/bottom fade edges */}
+      {/* Transitions */}
       <div
-        className="absolute top-0 left-0 right-0 h-32 pointer-events-none z-10"
+        className="absolute top-0 left-0 right-0 h-52 pointer-events-none z-10"
         style={{ background: 'linear-gradient(to bottom, var(--bg-primary), transparent)' }}
       />
       <div
-        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-10"
+        className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-10"
         style={{ background: 'linear-gradient(to top, var(--bg-primary), transparent)' }}
       />
 
@@ -123,7 +138,7 @@ export function FinalCTA() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight"
+          className={`text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight ${isDark ? 'text-white' : 'text-[#1a1033]'}`}
         >
           Stop guessing.
           <br />
@@ -138,7 +153,7 @@ export function FinalCTA() {
           whileInView="visible"
           viewport={viewportOnce}
           custom={0.15}
-          className="text-lg text-[var(--text-primary)] opacity-60 mb-12 max-w-lg mx-auto"
+          className={`text-lg mb-12 max-w-lg mx-auto ${isDark ? 'text-white/50' : 'text-[#1a1033]/50'}`}
         >
           Get your first competitor UX report in 30 minutes. Free.
         </motion.p>
@@ -153,9 +168,13 @@ export function FinalCTA() {
           <motion.button
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-[var(--text-primary)] text-[var(--bg-primary)] text-lg font-semibold cursor-pointer select-none"
+            className={`group inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-lg font-semibold cursor-pointer select-none ${
+              isDark ? 'bg-white text-[#08051a]' : 'bg-[#1a1033] text-white'
+            }`}
             style={{
-              boxShadow: '0 0 40px rgba(255,107,44,0.2), 0 0 80px rgba(99,102,241,0.15), 0 20px 40px rgba(0,0,0,0.2)',
+              boxShadow: isDark
+                ? '0 0 60px rgba(99,102,241,0.25), 0 0 100px rgba(255,107,44,0.1), 0 20px 40px rgba(0,0,0,0.4)'
+                : '0 0 60px rgba(99,102,241,0.2), 0 0 100px rgba(255,107,44,0.08), 0 20px 40px rgba(0,0,0,0.1)',
             }}
           >
             Start Free Analysis
